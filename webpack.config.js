@@ -1,9 +1,12 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const config = {
+export default {
+  mode: 'development',
   entry: './src/index.js',
   module: {
     rules: [
@@ -47,13 +50,4 @@ const config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
   },
-};
-
-module.exports = () => {
-  if (isProduction) {
-    config.mode = 'production';
-  } else {
-    config.mode = 'development';
-  }
-  return config;
 };
