@@ -48,7 +48,7 @@ export default () => {
         if (!response.data.contents.includes('</rss>')) {
           throw new Error('String is not RSS');
         }
-        state.formInfo.addedUrls.push(url);
+        state.formInfo.urls.push(url);
         console.log(response.data);
       });
   });
