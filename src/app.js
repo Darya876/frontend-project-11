@@ -1,8 +1,10 @@
 import i18next from 'i18next';
-// import { watchForm, watchPosts, watchFeeds } from './view.js';
+import { watchForm, watchPosts, watchFeeds } from './view.js';
 import validate from './validate.js';
 import parser from './parser.js';
 import locales from './locales.js';
+import parserRSS from './parserRSS.js';
+import updateRSS from './updateRSS.js';
 
 export default () => {
   i18next.init({ lng: 'ru', debug: true, resources: { locales } });
@@ -33,14 +35,18 @@ export default () => {
     },
   };
 
-  // const watchedForm = watchForm(state, elements.input);
-  // const watchedPosts = watchPosts(state.data, elements.postsBox);
-  // const watchedFeeds = watchFeeds(state.data.feeds, elements.feedsBox);
+  const watchedForm = watchForm(state, elements.input);
+  const watchedPosts = watchPosts(state.data);
+  const watchedFeeds = watchFeeds(state.data.feeds, elements.feedsBox);
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
     const url = elements.input.value;
     state.form.url = url;
+
+    // if (state.formInfo.urls.length === 0) {
+    //   updateRSS(state, watchedFeeds, watchedPosts, parser, parserRSS);
+    // }
 
     validate(url, state)
       .then(() => parser(url))
@@ -49,7 +55,46 @@ export default () => {
           throw new Error('String is not RSS');
         }
         state.formInfo.urls.push(url);
-        console.log(response.data);
+        // console.log(state);
+        if (response.status >= 200 && response.status < 300) {
+          console.log(response.status);
+          // state.form.urlValid = true;
+          console.log(state);
+          const { feed, posts } = parserRSS(
+            response.data.contents,
+            state.data.posts.length,
+          );
+          console.log({ feed });
+          console.log({ posts });
+          // console.log(watchedPosts);
+          watchedFeeds.push(feed);
+          watchedPosts.posts.push(...posts);
+          state.formInfo.status = i18next.t('successfullyAdded');
+          watchedForm.urlValid = true;
+          console.log(state);
+        }
+      })
+      .catch((error) => {
+        state.form.urlValid = '';
+        switch (error.message) {
+          case 'Network Error':
+            state.formInfo.status = 'Ошибка сети';
+            watchedForm.urlValid = false;
+            console.log('Ошибка сети');
+            break;
+          case 'String is not RSS':
+            state.formInfo.status = 'Ресурс не содержит валидный RSS';
+            watchedForm.urlValid = false;
+            console.log('Ресурс не содержит валидный RSS');
+            break;
+          default:
+            state.formInfo.status = error.errors;
+            watchedForm.urlValid = false;
+            console.log('default');
+        }
       });
+
+    elements.input.focus();
+    elements.form.reset();
   });
 };

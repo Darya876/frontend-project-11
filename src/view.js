@@ -1,5 +1,5 @@
 import onChange from 'on-change';
-// Возможно, понадобится input в параметрах renderBox, тогда и в watchForm нужно будет поменять!
+
 const renderErrors = (state, input) => {
   const feedback = state.formInfo.status;
   const errorBox = document.querySelector('.feedback');
@@ -15,19 +15,21 @@ const renderErrors = (state, input) => {
   errorBox.textContent = feedback;
 };
 
-const renderPosts = (data, postsBox) => {
+const renderPosts = (data) => {
+  const postsBox = document.querySelector('.posts');
+  postsBox.innerHTML = '';
+
   const card = document.createElement('div');
   card.classList.add('card', 'border-0');
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
   card.append(cardBody);
   const cardTitle = document.createElement('h2');
-  cardTitle.classList.add('card-title', 'h4');
+  cardTitle.classList.add('card-title', 'h4'); // h2 or h4???
   cardTitle.textContent = 'Посты';
   cardBody.append(cardTitle);
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
-  card.append(ul);
 
   // const modalOpen = document.querySelector('.modal-open');
   // const modal = document.querySelector('#modal');
@@ -43,8 +45,7 @@ const renderPosts = (data, postsBox) => {
     a.setAttribute('data-id', post.id);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
-    // или нужно в скобках a.id (ниже)
-    if (data.ui.openedLinks.includes(post.id)) {
+    if (data.ui.openedLinks.includes(a.id)) {
       a.classList.add('fw-normal', 'link-secondary');
     } else {
       a.classList.add('fw-bold');
@@ -64,18 +65,22 @@ const renderPosts = (data, postsBox) => {
     ul.append(li);
 
     a.addEventListener('click', () => {
-      a.classList.rremove('fw-bold');
+      a.classList.remove('fw-bold');
       a.classList.add('fw-normal', 'link-secondary');
-      // или нужно в скобках a.id (ниже)
-      data.ui.openedLinks.push(post.id);
+      data.ui.openedLinks.push(a.id);
     });
 
     button.addEventListener('click', () => {
       modalTitle.textContent = post.title;
       modalBody.textContent = post.description;
       href.setAttribute('href', post.link);
+
+      // a.classList.remove('fw-bold');
+      // a.classList.add('fw-normal', 'link-secondary');
     });
   });
+
+  card.append(ul);
   postsBox.append(card);
 };
 
@@ -91,7 +96,6 @@ const renderFeeds = (feeds, feedsBox) => {
   cardBody.append(cardTitle);
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
-  card.append(ul);
 
   feeds.forEach((feed) => {
     const li = document.createElement('li');
@@ -108,23 +112,12 @@ const renderFeeds = (feeds, feedsBox) => {
     ul.append(li);
   });
 
+  card.append(ul);
   feedsBox.append(card);
 };
 
-export const watchForm = (state, input) => {
-  onChange(state.form, () => {
-    renderErrors(state, input);
-  });
-};
+export const watchForm = (state, input) => onChange(state.form, () => renderErrors(state, input));
 
-export const watchFeeds = (feeds, feedsBox) => {
-  onChange(feeds, () => {
-    renderFeeds(feeds, feedsBox);
-  });
-};
+export const watchFeeds = (feeds, feedsBox) => onChange(feeds, () => renderFeeds(feeds, feedsBox));
 
-export const watchPosts = (data, postsBox) => {
-  onChange(data, () => {
-    renderPosts(data, postsBox);
-  });
-};
+export const watchPosts = (data) => onChange(data, () => renderPosts(data));
