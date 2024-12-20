@@ -4,10 +4,13 @@ import validate from './validate.js';
 import parser from './parser.js';
 import locales from './locales.js';
 import parserRSS from './parserRSS.js';
-import updateRSS from './updateRSS.js';
 
 export default () => {
-  i18next.init({ lng: 'ru', debug: true, resources: { locales } });
+  i18next.init({
+    lng: 'ru',
+    debug: true,
+    resources: locales,
+  });
 
   const elements = {
     feedsBox: document.querySelector('.feeds'),
@@ -37,16 +40,12 @@ export default () => {
 
   const watchedForm = watchForm(state, elements.input);
   const watchedPosts = watchPosts(state.data);
-  const watchedFeeds = watchFeeds(state.data.feeds, elements.feedsBox);
+  const watchedFeeds = watchFeeds(state.data.feeds);
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
     const url = elements.input.value;
     state.form.url = url;
-
-    // if (state.formInfo.urls.length === 0) {
-    //   updateRSS(state, watchedFeeds, watchedPosts, parser, parserRSS);
-    // }
 
     validate(url, state)
       .then(() => parser(url))
@@ -70,6 +69,7 @@ export default () => {
           watchedFeeds.push(feed);
           watchedPosts.posts.push(...posts);
           state.formInfo.status = i18next.t('successfullyAdded');
+          console.log(state.formInfo.status);
           watchedForm.urlValid = true;
           console.log(state);
         }

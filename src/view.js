@@ -84,7 +84,10 @@ const renderPosts = (data) => {
   postsBox.append(card);
 };
 
-const renderFeeds = (feeds, feedsBox) => {
+const renderFeeds = (feeds) => {
+  const feedsBox = document.querySelector('.feeds');
+  feedsBox.innerHTML = '';
+
   const card = document.createElement('div');
   card.classList.add('card', 'border-0');
   const cardBody = document.createElement('div');
