@@ -2,14 +2,14 @@ import i18next from 'i18next';
 import { watchForm, watchPosts, watchFeeds } from './view.js';
 import validate from './validate.js';
 import parser from './parser.js';
-import locales from './locales.js';
+import ru from './ru.js';
 import parserRSS from './parserRSS.js';
 
 export default () => {
   i18next.init({
     lng: 'ru',
     debug: true,
-    resources: locales,
+    resources: { ru },
   });
 
   const elements = {
