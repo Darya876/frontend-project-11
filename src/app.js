@@ -4,6 +4,7 @@ import validate from './validate.js';
 import parser from './parser.js';
 import ru from './ru.js';
 import parserRSS from './parserRSS.js';
+import updateRSS from './updateRSS.js';
 
 export default () => {
   i18next.init({

@@ -31,8 +31,11 @@ const renderPosts = (data) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
 
-  // const modalOpen = document.querySelector('.modal-open');
-  // const modal = document.querySelector('#modal');
+  const modalOpen = document.querySelector('body');
+  const modal = document.querySelector('#modal');
+  const btnSec = document.querySelector('.btn-secondary');
+  const btnClose = document.querySelector('.btn-close');
+  const btnPrim = document.querySelector('.btn-primary');
   const modalTitle = document.querySelector('.modal-title');
   const modalBody = document.querySelector('.modal-body');
   const href = document.querySelector('.full-article');
@@ -52,6 +55,7 @@ const renderPosts = (data) => {
     }
 
     a.textContent = post.title;
+
     const button = document.createElement('button');
     button.setAttribute('type', 'button');
     button.setAttribute('data-id', post.id);
@@ -68,13 +72,47 @@ const renderPosts = (data) => {
       a.classList.remove('fw-bold');
       a.classList.add('fw-normal', 'link-secondary');
       data.ui.openedLinks.push(a.id);
-      window.open(post.link);
+      window.open(post.link); // не открывается ссылка (так как в post.link ничего не добавляется)
     });
 
     button.addEventListener('click', () => {
       modalTitle.textContent = post.title;
       modalBody.textContent = post.description;
+      console.log(post);
       href.setAttribute('href', post.link);
+
+      modalOpen.classList.add('modal-open');
+      modalOpen.setAttribute('style', 'overflow: hidden; padding-right: 15px;');
+
+      modal.setAttribute('role', 'dialog');
+      modal.classList.add('show');
+      modal.removeAttribute('aria-hidden');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('style', 'display: block;');
+
+      btnSec.addEventListener('click', () => {
+        modalOpen.classList.remove('modal-open');
+        modalOpen.setAttribute('style', '');
+        modal.removeAttribute('role');
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.removeAttribute('aria-modal');
+        modal.setAttribute('style', 'display: none;');
+      });
+
+      btnClose.addEventListener('click', () => {
+        modalOpen.classList.remove('modal-open');
+        modalOpen.setAttribute('style', '');
+        modal.removeAttribute('role');
+        modal.classList.remove('show');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.removeAttribute('aria-modal');
+        modal.setAttribute('style', 'display: none;');
+      })
+
+      btnPrim.addEventListener('click', () => {
+        window.open(post.link)
+      })
 
       a.classList.remove('fw-bold');
       a.classList.add('fw-normal', 'link-secondary');
