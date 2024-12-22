@@ -68,6 +68,7 @@ const renderPosts = (data) => {
       a.classList.remove('fw-bold');
       a.classList.add('fw-normal', 'link-secondary');
       data.ui.openedLinks.push(a.id);
+      window.open(post.link);
     });
 
     button.addEventListener('click', () => {
@@ -75,8 +76,8 @@ const renderPosts = (data) => {
       modalBody.textContent = post.description;
       href.setAttribute('href', post.link);
 
-      // a.classList.remove('fw-bold');
-      // a.classList.add('fw-normal', 'link-secondary');
+      a.classList.remove('fw-bold');
+      a.classList.add('fw-normal', 'link-secondary');
     });
   });
 

@@ -54,22 +54,15 @@ export default () => {
           throw new Error('String is not RSS');
         }
         state.formInfo.urls.push(url);
-        // console.log(state);
         if (response.status >= 200 && response.status < 300) {
           console.log(response.status);
-          // state.form.urlValid = true;
-          console.log(state);
           const { feed, posts } = parserRSS(
             response.data.contents,
             state.data.posts.length,
           );
-          console.log({ feed });
-          console.log({ posts });
-          // console.log(watchedPosts);
           watchedFeeds.push(feed);
           watchedPosts.posts.push(...posts);
           state.formInfo.status = i18next.t('successfullyAdded');
-          console.log(state.formInfo.status);
           watchedForm.urlValid = true;
           console.log(state);
         }

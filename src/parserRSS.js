@@ -13,12 +13,12 @@ export default (rssResponse, id) => {
   posts.forEach((item) => {
     const title = item.querySelector('title').textContent;
     const description = item.querySelector('description').textContent;
-    const link = item.querySelector('link').textContent;
+    const link = item.querySelector('a').href;
     const post = {
       title, link, description, id: `${id} + 1`,
     };
     newPosts.push(post);
   });
 
-  return { feed, posts };
+  return { feed, posts: newPosts };
 };
