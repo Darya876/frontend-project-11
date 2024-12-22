@@ -61,7 +61,7 @@ export default () => {
             state.data.posts.length,
           );
           watchedFeeds.push(feed);
-          watchedPosts.posts.push(...posts);
+          watchedPosts.posts.unshift(...posts);
           state.formInfo.status = i18next.t('successfullyAdded');
           watchedForm.urlValid = true;
           console.log(state);
