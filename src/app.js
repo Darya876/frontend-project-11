@@ -65,7 +65,6 @@ export default () => {
           watchedPosts.posts.unshift(...posts);
           state.formInfo.status = i18next.t('successfullyAdded');
           watchedForm.urlValid = true;
-          console.log(state);
         }
       })
       .catch((error) => {
