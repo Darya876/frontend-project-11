@@ -46,10 +46,6 @@ export default () => {
     const url = elements.input.value;
     watchedForm.url = url;
 
-    if (state.formInfo.urls.length === 0) {
-      updateRSS(state, parser, parserRSS, watchedPosts, watchedFeeds);
-    }
-
     validate(url, state)
       .then(() => parser(url))
       .then((response) => {
@@ -59,11 +55,12 @@ export default () => {
         state.formInfo.urls.push(url);
         if (response.status >= 200 && response.status < 300) {
           console.log(response.status);
+          const startId = 0;
           const { feed, posts } = parserRSS(
             response.data.contents,
-            state.data.posts.length,
+            startId,
           );
-          watchedFeeds.push(feed);
+          watchedFeeds.unshift(feed);
           watchedPosts.posts.unshift(...posts);
           state.formInfo.status = i18next.t('successfullyAdded');
           watchedForm.urlValid = true;
@@ -71,6 +68,7 @@ export default () => {
           elements.form.reset();
         }
       })
+      .then(() => setTimeout(() => updateRSS(state, parser, parserRSS, watchedPosts)))
       .catch((error) => {
         state.form.urlValid = '';
         switch (error.message) {
@@ -87,7 +85,7 @@ export default () => {
           default:
             state.formInfo.status = error.errors;
             watchedForm.urlValid = false;
-            console.log('default');
+            console.log('Введите валидный RSS');
         }
       });
   });
