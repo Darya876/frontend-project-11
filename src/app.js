@@ -44,7 +44,7 @@ export default () => {
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
     const url = elements.input.value;
-    state.form.url = url;
+    watchedForm.url = url;
 
     if (state.formInfo.urls.length === 0) {
       updateRSS(state, parser, parserRSS, watchedPosts, watchedFeeds);
