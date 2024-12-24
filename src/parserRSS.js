@@ -1,5 +1,5 @@
 export default (rssResponse, id) => {
-  const doc = new DOMParser().parseFromString(rssResponse, 'text/html').documentElement;
+  const doc = new DOMParser().parseFromString(rssResponse, 'text/xml').documentElement;
   const channel = doc.querySelector('channel');
 
   const feed = {
@@ -14,8 +14,9 @@ export default (rssResponse, id) => {
     const title = item.querySelector('title').textContent;
     const description = item.querySelector('description').textContent;
     const link = item.querySelector('link').textContent;
+    id += 1; // eslint-disable-line no-param-reassign
     const post = {
-      title, link, description, id: `${id} + 1`,
+      title, link, description, id,
     };
     newPosts.push(post);
   });

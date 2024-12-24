@@ -25,9 +25,7 @@ export default () => {
     data: {
       feeds: [],
       posts: [],
-      ui: {
-        openedLinks: [],
-      },
+      openedLinks: [],
     },
     formInfo: {
       urls: [],
@@ -48,6 +46,10 @@ export default () => {
     const url = elements.input.value;
     state.form.url = url;
 
+    if (state.formInfo.urls.length === 0) {
+      updateRSS(state, parser, parserRSS, watchedPosts, watchedFeeds);
+    }
+
     validate(url, state)
       .then(() => parser(url))
       .then((response) => {
@@ -65,6 +67,8 @@ export default () => {
           watchedPosts.posts.unshift(...posts);
           state.formInfo.status = i18next.t('successfullyAdded');
           watchedForm.urlValid = true;
+          elements.input.focus();
+          elements.form.reset();
         }
       })
       .catch((error) => {
@@ -86,8 +90,5 @@ export default () => {
             console.log('default');
         }
       });
-
-    elements.input.focus();
-    elements.form.reset();
   });
 };

@@ -32,11 +32,6 @@ const renderPosts = (data) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
 
-  const modal = document.querySelector('#modal');
-  const modalTitle = document.querySelector('.modal-title');
-  const modalBody = document.querySelector('.modal-body');
-  const href = document.querySelector('.full-article');
-
   data.posts.forEach((post) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
@@ -45,7 +40,7 @@ const renderPosts = (data) => {
     a.setAttribute('data-id', post.id);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
-    if (data.ui.openedLinks.includes(a.id)) {
+    if (data.openedLinks.includes(post.id)) {
       a.classList.add('fw-normal', 'link-secondary');
     } else {
       a.classList.add('fw-bold');
@@ -65,11 +60,20 @@ const renderPosts = (data) => {
 
     ul.append(li);
 
+    const modal = document.querySelector('#modal');
+    const modalTitle = document.querySelector('.modal-title');
+    const modalBody = document.querySelector('.modal-body');
+    const href = document.querySelector('.full-article');
+
     a.addEventListener('click', () => {
       a.classList.remove('fw-bold');
       a.classList.add('fw-normal', 'link-secondary');
-      data.ui.openedLinks.push(a.id);
-      window.open(post.link); // не открывается ссылка (так как в post.link ничего не добавляется)
+
+      if (!data.openedLinks.includes(post.id)) {
+        data.openedLinks.push(post.id);
+      }
+
+      window.open(post.link);
     });
 
     button.addEventListener('click', () => {
@@ -83,8 +87,21 @@ const renderPosts = (data) => {
       const mod = new bootstrap.Modal(modal);
       mod.show();
 
+      const btnSec = document.querySelector('.btn-secondary');
+      const btnClose = document.querySelector('.btn-close');
+      btnClose.addEventListener('click', () => {
+        mod.hide();
+      });
+      btnSec.addEventListener('click', () => {
+        mod.hide();
+      });
+
       const backdrop = document.querySelector('.modal-backdrop');
       backdrop.remove();
+
+      if (!data.openedLinks.includes(post.id)) {
+        data.openedLinks.push(post.id);
+      }
     });
   });
 

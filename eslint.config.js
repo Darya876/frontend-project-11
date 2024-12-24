@@ -15,7 +15,6 @@ const compat = new FlatCompat({
 });
 
 export default [
-  // eslint-disable-next-line no-param-reassign
   {
     ignores: ['dist/'],
   },
