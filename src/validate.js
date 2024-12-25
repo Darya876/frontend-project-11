@@ -8,12 +8,14 @@ export default (url, state) => {
     },
     string: {
       matches: i18next.t('errors.nonValid'),
+      url: i18next.t('errors.expectedValidUrl'),
     },
   });
 
   const schema = yup.object({
     url: yup.string()
       .notOneOf(state.formInfo.urls)
+      .url()
       .matches(/((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/),
   });
 

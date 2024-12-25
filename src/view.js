@@ -2,7 +2,6 @@ import onChange from 'on-change';
 import * as bootstrap from 'bootstrap';
 
 const renderErrors = (state, input) => {
-  const feedback = state.formInfo.status;
   const errorBox = document.querySelector('.feedback');
 
   if (state.form.urlValid === true) {
@@ -12,8 +11,6 @@ const renderErrors = (state, input) => {
     errorBox.classList.replace('text-success', 'text-danger');
     input.classList.add('is-invalid');
   }
-
-  errorBox.textContent = feedback;
 };
 
 const renderPosts = (data) => {

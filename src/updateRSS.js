@@ -6,7 +6,6 @@ export default function updatePosts(state, parser, parserRSS, watchedPosts) {
   }).then((response) => {
     const { posts } = parserRSS(response.data.contents);
     const diff = _.differenceBy(posts, watchedPosts.posts, 'link');
-    console.log(watchedPosts.posts);
     watchedPosts.posts = [...diff, ...watchedPosts.posts]; // eslint-disable-line no-param-reassign
     return watchedPosts;
   }).catch((err) => console.error(err.message))
