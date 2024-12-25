@@ -85,7 +85,7 @@ export default () => {
           default:
             state.formInfo.status = error.errors;
             watchedForm.urlValid = false;
-            console.log('Введите валидный RSS');
+            console.log('default');
         }
       });
   });

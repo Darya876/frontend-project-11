@@ -5,18 +5,15 @@ export default function updatePosts(state, parser, parserRSS, watchedPosts) {
     resolve(parser(url));
   }).then((response) => {
     const startId = 0;
-    console.log(response);
     const { posts } = parserRSS(response.data.contents, startId);
-    const diff = _.differenceBy(posts, watchedPosts, 'link');
-    console.log(posts);
-    console.log(diff);
-    console.log([...diff, ...watchedPosts.posts]);
+    const diff = _.differenceBy(posts, watchedPosts.posts, 'link');
     watchedPosts.posts = [...diff, ...watchedPosts.posts]; // eslint-disable-line no-param-reassign
     return watchedPosts;
-  }).catch((err) => console.error(err.message)).finally(() => setTimeout(() => updatePosts(
-    state,
-    parser,
-    parserRSS,
-    watchedPosts,
-  ), 5000)));
+  }).catch((err) => console.error(err.message))
+    .finally(() => setTimeout(() => updatePosts(
+      state,
+      parser,
+      parserRSS,
+      watchedPosts,
+    ), 5000)));
 }
