@@ -55,10 +55,8 @@ export default () => {
         state.formInfo.urls.push(url);
         if (response.status >= 200 && response.status < 300) {
           console.log(response.status);
-          const startId = 0;
           const { feed, posts } = parserRSS(
             response.data.contents,
-            startId,
           );
           watchedFeeds.unshift(feed);
           watchedPosts.posts.unshift(...posts);
@@ -68,7 +66,7 @@ export default () => {
           elements.form.reset();
         }
       })
-      .then(() => setTimeout(() => updateRSS(state, parser, parserRSS, watchedPosts)))
+      .then(() => setTimeout(() => updateRSS(state, parser, parserRSS, watchedPosts), 5000))
       .catch((error) => {
         state.form.urlValid = '';
         switch (error.message) {
