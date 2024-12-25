@@ -53,6 +53,10 @@ export default () => {
           throw new Error('String is not RSS');
         }
 
+        // if (state.formInfo.urls.includes(url)) {
+        //   throw new Error('RSS already exists')
+        // }
+
         state.formInfo.urls.push(url);
         if (response.status >= 200 && response.status < 300) {
           const { feed, posts } = parserRSS(
@@ -73,17 +77,22 @@ export default () => {
         console.log(error.message);
         switch (error.message) {
           case 'Ссылка должна быть валидным URL':
-            state.formInfo.status = 'Ссылка должна быть валидным URL';
+            state.formInfo.status = i18next.t('errors.expectedValidUrl');
             watchForm.urlValid = false;
             elements.errorBox.textContent = state.formInfo.status;
             break;
           case 'Network Error':
-            state.formInfo.status = 'Ошибка сети';
+            state.formInfo.status = i18next.t('errors.networkErr');
             watchedForm.urlValid = false;
             elements.errorBox.textContent = state.formInfo.status;
             break;
           case 'String is not RSS':
-            state.formInfo.status = 'Ресурс не содержит валидный RSS';
+            state.formInfo.status = i18next.t('errors.nonValid');
+            watchedForm.urlValid = false;
+            elements.errorBox.textContent = state.formInfo.status;
+            break;
+          case 'RSS уже существует':
+            state.formInfo.status = i18next.t('errors.alreadyExists');
             watchedForm.urlValid = false;
             elements.errorBox.textContent = state.formInfo.status;
             break;
