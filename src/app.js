@@ -1,5 +1,4 @@
 import i18next from 'i18next';
-import bootstrap from 'bootstrap';
 import { watchForm, watchPosts, watchFeeds } from './view.js';
 import validate from './validate.js';
 import getData from './getData.js';
@@ -45,15 +44,9 @@ const app = () => {
     validate(url, state)
       .then(() => getData(url))
       .then((response) => {
-        if (!response.data.contents.includes('</rss>')) {
-          throw new Error('String is not RSS');
-        }
-
         state.formInfo.urls.push(url);
         if (response.status >= 200 && response.status < 300) {
-          const { feed, posts } = parserRSS(
-            response.data.contents,
-          );
+          const { feed, posts } = parserRSS(response.data.contents);
           watchedFeeds.unshift(feed);
           watchedPosts.posts.unshift(...posts);
           state.formInfo.status = i18next.t('successfullyAdded');

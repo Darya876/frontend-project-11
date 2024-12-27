@@ -1,6 +1,10 @@
 import _ from 'lodash';
 
 export default (rssResponse) => {
+  if (!rssResponse.includes('</rss>')) {
+    throw new Error('String is not RSS');
+  }
+
   const document = new DOMParser().parseFromString(rssResponse, 'text/xml');
   const doc = document.documentElement;
   const channel = doc.querySelector('channel');
