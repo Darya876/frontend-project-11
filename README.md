@@ -1,9 +1,15 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Darya876/frontend-project-11/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Darya876/frontend-project-11/actions)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/a463e6169293fec200eb/maintainability)](https://codeclimate.com/github/Darya876/frontend-project-11/maintainability)
+
 # RSS aggregator with updates every 5 seconds
 
 Here you can find a RSS agregator package makes it possible to add RSS streams from different sources. 
+
+## Visit app to try
+
+https://frontend-project-11-ten-zeta.vercel.app/
 
 ## Install
 

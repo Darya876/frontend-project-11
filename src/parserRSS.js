@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
 export default (rssResponse) => {
-  const doc = new DOMParser().parseFromString(rssResponse, 'text/xml').documentElement;
+  const document = new DOMParser().parseFromString(rssResponse, 'text/xml');
+  const doc = document.documentElement;
   const channel = doc.querySelector('channel');
 
   const feed = {

@@ -1,5 +1,4 @@
 import onChange from 'on-change';
-import * as bootstrap from 'bootstrap';
 
 const renderErrors = (state, input) => {
   const errorBox = document.querySelector('.feedback');
@@ -13,7 +12,7 @@ const renderErrors = (state, input) => {
   }
 };
 
-const renderPosts = (data) => {
+const renderPosts = (state, data) => {
   const postsBox = document.querySelector('.posts');
   postsBox.innerHTML = '';
 
@@ -57,49 +56,22 @@ const renderPosts = (data) => {
 
     ul.append(li);
 
-    const modal = document.querySelector('#modal');
-    const modalTitle = document.querySelector('.modal-title');
-    const modalBody = document.querySelector('.modal-body');
-    const href = document.querySelector('.full-article');
-
-    a.addEventListener('click', () => {
+    if (state.data.openedLinks.includes(post.id)) {
       a.classList.remove('fw-bold');
       a.classList.add('fw-normal', 'link-secondary');
 
-      if (!data.openedLinks.includes(post.id)) {
-        data.openedLinks.push(post.id);
-      }
-
-      window.open(post.link);
-    });
-
-    button.addEventListener('click', () => {
+      const modalTitle = document.querySelector('.modal-title');
+      const modalBody = document.querySelector('.modal-body');
+      const href = document.querySelector('.full-article');
       modalTitle.textContent = post.title;
       modalBody.textContent = post.description;
       href.setAttribute('href', post.link);
+    }
 
-      a.classList.remove('fw-bold');
-      a.classList.add('fw-normal', 'link-secondary');
-
-      const mod = new bootstrap.Modal(modal);
-      mod.show();
-
-      const btnSec = document.querySelector('.btn-secondary');
-      const btnClose = document.querySelector('.btn-close');
-      btnClose.addEventListener('click', () => {
-        mod.hide();
-      });
-      btnSec.addEventListener('click', () => {
-        mod.hide();
-      });
-
-      const backdrop = document.querySelector('.modal-backdrop');
-      backdrop.remove();
-
-      if (!data.openedLinks.includes(post.id)) {
-        data.openedLinks.push(post.id);
-      }
-    });
+    const form = document.querySelector('form');
+    const input = document.querySelector('#url-input');
+    input.focus();
+    form.reset();
   });
 
   card.append(ul);
@@ -145,4 +117,4 @@ export const watchForm = (state, input) => onChange(state.form, () => renderErro
 
 export const watchFeeds = (feeds, feedsBox) => onChange(feeds, () => renderFeeds(feeds, feedsBox));
 
-export const watchPosts = (data) => onChange(data, () => renderPosts(data));
+export const watchPosts = (state, data) => onChange(data, () => renderPosts(state, data));

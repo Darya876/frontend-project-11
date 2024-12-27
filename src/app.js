@@ -1,18 +1,14 @@
 import i18next from 'i18next';
+import bootstrap from 'bootstrap';
 import { watchForm, watchPosts, watchFeeds } from './view.js';
 import validate from './validate.js';
-import parser from './parser.js';
+import getData from './getData.js';
 import ru from './ru.js';
 import parserRSS from './parserRSS.js';
 import updateRSS from './updateRSS.js';
+import typeError from './typeError.js';
 
-export default () => {
-  i18next.init({
-    lng: 'ru',
-    debug: true,
-    resources: { ru },
-  });
-
+const app = () => {
   const elements = {
     feedsBox: document.querySelector('.feeds'),
     postsBox: document.querySelector('.posts'),
@@ -38,7 +34,7 @@ export default () => {
   };
 
   const watchedForm = watchForm(state, elements.input);
-  const watchedPosts = watchPosts(state.data);
+  const watchedPosts = watchPosts(state, state.data);
   const watchedFeeds = watchFeeds(state.data.feeds);
 
   elements.form.addEventListener('submit', (event) => {
@@ -47,15 +43,11 @@ export default () => {
     watchedForm.url = url;
 
     validate(url, state)
-      .then(() => parser(url))
+      .then(() => getData(url))
       .then((response) => {
         if (!response.data.contents.includes('</rss>')) {
           throw new Error('String is not RSS');
         }
-
-        // if (state.formInfo.urls.includes(url)) {
-        //   throw new Error('RSS already exists')
-        // }
 
         state.formInfo.urls.push(url);
         if (response.status >= 200 && response.status < 300) {
@@ -67,39 +59,27 @@ export default () => {
           state.formInfo.status = i18next.t('successfullyAdded');
           elements.errorBox.textContent = state.formInfo.status;
           watchedForm.urlValid = true;
-          elements.input.focus();
-          elements.form.reset();
         }
       })
-      .then(() => setTimeout(() => updateRSS(state, parser, parserRSS, watchedPosts), 5000))
       .catch((error) => {
-        // state.form.urlValid = '';
-        console.log(error.message);
-        switch (error.message) {
-          case 'Ссылка должна быть валидным URL':
-            state.formInfo.status = i18next.t('errors.expectedValidUrl');
-            watchForm.urlValid = false;
-            elements.errorBox.textContent = state.formInfo.status;
-            break;
-          case 'Network Error':
-            state.formInfo.status = i18next.t('errors.networkErr');
-            watchedForm.urlValid = false;
-            elements.errorBox.textContent = state.formInfo.status;
-            break;
-          case 'String is not RSS':
-            state.formInfo.status = i18next.t('errors.nonValid');
-            watchedForm.urlValid = false;
-            elements.errorBox.textContent = state.formInfo.status;
-            break;
-          case 'RSS уже существует':
-            state.formInfo.status = i18next.t('errors.alreadyExists');
-            watchedForm.urlValid = false;
-            elements.errorBox.textContent = state.formInfo.status;
-            break;
-          default:
-            state.formInfo.status = error.errors;
-            watchedForm.urlValid = false;
-        }
+        state.formInfo.status = typeError(error, state, watchedForm);
       });
   });
+
+  elements.postsBox.addEventListener('click', (e) => {
+    const { id } = e.target.dataset;
+    watchedPosts.openedLinks.push(id);
+  });
+
+  updateRSS(state, getData, parserRSS, watchedPosts);
 };
+
+i18next
+  .init({
+    lng: 'ru',
+    debug: true,
+    resources: { ru },
+  })
+  .then(() => app());
+
+export default app;
