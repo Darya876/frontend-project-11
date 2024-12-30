@@ -6,13 +6,15 @@ export const changeForm = (state) => {
   if (state.form.urlValid === true) {
     errorBox.classList.replace('text-danger', 'text-success');
     input.classList.remove('is-invalid');
-  } else {
+    input.focus();
+    form.reset();
+  }
+  if (state.form.urlValid === false) {
     errorBox.classList.replace('text-success', 'text-danger');
     input.classList.add('is-invalid');
+    input.focus();
+    input.value = state.form.url;
   }
-
-  input.focus();
-  form.reset();
 };
 
 export const changePosts = (state) => {
@@ -95,4 +97,23 @@ export const changeFeeds = (state) => {
 
   card.append(ul);
   feedsBox.append(card);
+};
+
+export const changeModal = (state) => {
+  const postToFind = state.data.posts.find((post) => post.id === state.data.modalId);
+  const postsBox = document.querySelector('.posts');
+
+  const modalTitle = document.querySelector('.modal-title');
+  const modalBody = document.querySelector('.modal-body');
+  const href = document.querySelector('.full-article');
+
+  modalTitle.textContent = postToFind.title;
+  modalBody.textContent = postToFind.description;
+  href.setAttribute('href', postToFind.link);
+
+  const currentPost = postsBox.querySelector(`a[data-id="${postToFind.id}"]`);
+  if (state.data.openedLinks.includes(postToFind.id)) {
+    currentPost.classList.remove('fw-bold');
+    currentPost.classList.add('fw-normal', 'link-secondary');
+  }
 };
