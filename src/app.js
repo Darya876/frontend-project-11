@@ -1,5 +1,7 @@
 import i18next from 'i18next';
-import watchState from './watchState.js';
+import { setLocale } from 'yup';
+import _ from 'lodash';
+import watchState from './view.js';
 import validate from './validate.js';
 import getData from './getData.js';
 import ru from './ru.js';
@@ -14,6 +16,15 @@ const app = () => {
       debug: true,
       resources: { ru },
     })
+    .then(setLocale({
+      mixed: {
+        notOneOf: i18next.t('errors.alreadyExists'),
+      },
+      string: {
+        matches: i18next.t('errors.nonValid'),
+        url: i18next.t('errors.expectedValidUrl'),
+      },
+    }))
     .then(() => {
       const elements = {
         feedsBox: document.querySelector('.feeds'),
@@ -52,13 +63,18 @@ const app = () => {
             if (response.status >= 200 && response.status < 300) {
               watchedState.form.urlValid = true;
               const { feed, posts } = parserRSS(response.data.contents);
+              posts.forEach((post) => {
+                post.id = _.uniqueId(); // eslint-disable-line no-param-reassign
+              });
               watchedState.data.feeds.unshift(feed);
               watchedState.data.posts.unshift(...posts);
+              console.log(watchedState.data.posts);
               watchedState.form.status = i18next.t('successfullyAdded');
               elements.errorBox.textContent = watchedState.form.status;
             }
           })
           .catch((error) => {
+            watchedState.form.urlValid = false;
             watchedState.form.status = typeError(error, watchedState);
           });
       });

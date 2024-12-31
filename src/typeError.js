@@ -1,30 +1,16 @@
 import i18next from 'i18next';
 
-export default (error, watchedState) => {
-  const errorBox = document.querySelector('.feedback');
+export default (error) => {
   switch (error.message) {
     case 'Ссылка должна быть валидным URL':
-      watchedState.form.status = i18next.t('errors.expectedValidUrl'); // eslint-disable-line no-param-reassign
-      watchedState.form.urlValid = false; // eslint-disable-line no-param-reassign
-      errorBox.textContent = watchedState.form.status; // eslint-disable-line no-param-reassign
-      break;
+      return i18next.t('errors.expectedValidUrl');
     case 'Network Error':
-      watchedState.form.status = i18next.t('errors.networkErr'); // eslint-disable-line no-param-reassign
-      watchedState.form.urlValid = false; // eslint-disable-line no-param-reassign
-      errorBox.textContent = watchedState.form.status; // eslint-disable-line no-param-reassign
-      break;
+      return i18next.t('errors.networkErr');
     case 'String is not RSS':
-      watchedState.form.status = i18next.t('errors.nonValid'); // eslint-disable-line no-param-reassign
-      watchedState.form.urlValid = false; // eslint-disable-line no-param-reassign
-      errorBox.textContent = watchedState.form.status; // eslint-disable-line no-param-reassign
-      break;
+      return i18next.t('errors.nonValid');
     case 'RSS уже существует':
-      watchedState.form.status = i18next.t('errors.alreadyExists'); // eslint-disable-line no-param-reassign
-      watchedState.form.urlValid = false; // eslint-disable-line no-param-reassign
-      errorBox.textContent = watchedState.form.status; // eslint-disable-line no-param-reassign
-      break;
+      return i18next.t('errors.alreadyExists');
     default:
-      watchedState.form.status = error.errors; // eslint-disable-line no-param-reassign
-      watchedState.form.urlValid = false; // eslint-disable-line no-param-reassign
+      return error.errors;
   }
 };

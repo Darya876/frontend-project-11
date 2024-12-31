@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default (rssResponse) => {
   const document = new DOMParser().parseFromString(rssResponse, 'text/xml');
   const doc = document.documentElement;
@@ -19,12 +17,11 @@ export default (rssResponse) => {
   const posts = Array.from(items);
   const newPosts = [];
   posts.forEach((item) => {
-    const id = _.uniqueId();
     const title = item.querySelector('title').textContent;
     const description = item.querySelector('description').textContent;
     const link = item.querySelector('link').textContent;
     const post = {
-      title, link, description, id,
+      title, link, description,
     };
     newPosts.push(post);
   });

@@ -1,17 +1,6 @@
 import * as yup from 'yup';
-import i18next from 'i18next';
 
 export default (url, state) => {
-  yup.setLocale({
-    mixed: {
-      notOneOf: i18next.t('errors.alreadyExists'),
-    },
-    string: {
-      matches: i18next.t('errors.nonValid'),
-      url: i18next.t('errors.expectedValidUrl'),
-    },
-  });
-
   const schema = yup.object({
     url: yup
       .string()

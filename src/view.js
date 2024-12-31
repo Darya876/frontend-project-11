@@ -1,3 +1,5 @@
+import onChange from 'on-change';
+
 export const changeForm = (state) => {
   const errorBox = document.querySelector('.feedback');
   const input = document.querySelector('#url-input');
@@ -15,6 +17,8 @@ export const changeForm = (state) => {
     input.focus();
     input.value = state.form.url;
   }
+
+  errorBox.textContent = state.form.status;
 };
 
 export const changePosts = (state) => {
@@ -117,3 +121,28 @@ export const changeModal = (state) => {
     currentPost.classList.add('fw-normal', 'link-secondary');
   }
 };
+
+export default (state) => onChange(state, (path) => {
+  switch (path) {
+    case 'form.urlValid':
+      changeForm(state);
+      break;
+    case 'form.url':
+      changeForm(state);
+      break;
+    case 'form.status':
+      changeForm(state);
+      break;
+    case 'data.modalId':
+      changeModal(state);
+      break;
+    case 'data.feeds':
+      changeFeeds(state);
+      break;
+    case 'data.posts':
+      changePosts(state);
+      break;
+    default:
+      break;
+  }
+});
