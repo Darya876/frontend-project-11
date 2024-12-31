@@ -16,16 +16,17 @@ const app = () => {
       debug: true,
       resources: { ru },
     })
-    .then(setLocale({
-      mixed: {
-        notOneOf: i18next.t('errors.alreadyExists'),
-      },
-      string: {
-        matches: i18next.t('errors.nonValid'),
-        url: i18next.t('errors.expectedValidUrl'),
-      },
-    }))
     .then(() => {
+      setLocale({
+        mixed: {
+          notOneOf: i18next.t('errors.alreadyExists'),
+        },
+        string: {
+          matches: i18next.t('errors.nonValid'),
+          url: i18next.t('errors.expectedValidUrl'),
+        },
+      });
+
       const elements = {
         feedsBox: document.querySelector('.feeds'),
         postsBox: document.querySelector('.posts'),
