@@ -68,7 +68,6 @@ const app = () => {
               });
               watchedState.data.feeds.unshift(feed);
               watchedState.data.posts.unshift(...posts);
-              console.log(watchedState.data.posts);
               watchedState.form.status = i18next.t('successfullyAdded');
               elements.errorBox.textContent = watchedState.form.status;
             }

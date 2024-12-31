@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import typeError from './typeError.js';
 
 export default function updatePosts(watchedState, getData, parserRSS) {
   const promises = watchedState.urls.map((url) => getData(url)
@@ -9,7 +10,7 @@ export default function updatePosts(watchedState, getData, parserRSS) {
       watchedState.data.posts = [...diff, ...postsOld]; // eslint-disable-line no-param-reassign
       return watchedState;
     })
-    .catch((error) => console.error(error.message)));
+    .catch((error) => typeError(error.message)));
 
   return Promise.all(promises)
     .finally(() => setTimeout(() => updatePosts(
